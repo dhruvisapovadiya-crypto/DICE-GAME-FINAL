@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dice Battle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <h1 class="title neon">
+        <span>DICE</span>
+        <span class="bolt">🗲</span>
+        <span>GAME</span>
+    </h1>
+
+    <p class="tagline">
+        Roll the dice and challenge your friend! 🎲
+    </p>
+
+    <div class="home-wrapper">
+
+
+        <div class="home-card glass">
+            <input type="text" id="p1" maxlength="15" placeholder="Player 1 Name">
+            <input type="text" id="p2" maxlength="15" placeholder="Player 2 Name">
+            <p id="error" class="error-msg"></p>
+            <button class="play-btn" onclick="startGame()">🚀 Play Now</button>
+        </div>
+
+        <div class="home-card leaderboard">
+            <h2>🏆 Leaderboard</h2>
+            <table class="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th>Player 1</th>
+                        <th>Player 2</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody id="leaderboardBody">
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        window.addEventListener("DOMContentLoaded", function () {
+            loadLeaderboard();
+        });
+    </script>
+
+</body>
+
+</html>
