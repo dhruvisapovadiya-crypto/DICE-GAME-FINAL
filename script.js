@@ -1,9 +1,9 @@
-const diceFaces = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
 
+const diceFaces = ["⚀", "⚁", "⚂", "⚃", "⚄", "⚅"];
 let currentPlayer = 1;
 
-let p1Fixed;
-let p2Fixed;
+let Fixed1;
+let Fixed2;
 
 let player1Name = "";
 let player2Name = "";
@@ -28,7 +28,6 @@ function startGame() {
 }
 
 function playGame() {
-
     let p1 = document.getElementById("p1").value.trim();
     let p2 = document.getElementById("p2").value.trim();
     let error = document.getElementById("error");
@@ -45,11 +44,11 @@ function playGame() {
         return;
     }
     if (!regex.test(p1)) {
-        error.innerText = "Only alphabets allowed";
+        error.innerText = "Only alphabets are allowed in player1 name";
         return;
     }
     if (!regex.test(p2)) {
-        error.innerText = "Only alphabets allowed";
+        error.innerText = "Only alphabets allowed in player2 name";
         return;
     }
     if (p1.toLowerCase() === p2.toLowerCase()) {
@@ -59,12 +58,10 @@ function playGame() {
 
     localStorage.setItem("player1Name", p1);
     localStorage.setItem("player2Name", p2);
-
     window.location.href = "game.html";
 }
 
 function initGame() {
-
     player1Name = localStorage.getItem("player1Name");
     player2Name = localStorage.getItem("player2Name");
 
@@ -76,13 +73,14 @@ function initGame() {
     document.getElementById("p1Name").innerText = player1Name;
     document.getElementById("p2Name").innerText = player2Name;
 
-    p1Fixed = random();
+    Fixed1 = random();
     do {
-        p2Fixed = random();
-    } while (p2Fixed === p1Fixed);
+        Fixed2 = random();
+    }
+    while (Fixed2 === Fixed1);
 
-    document.getElementById("dice1").innerText = diceFaces[p1Fixed];
-    document.getElementById("dice2").innerText = diceFaces[p2Fixed];
+    document.getElementById("dice1").innerText = diceFaces[Fixed1];
+    document.getElementById("dice2").innerText = diceFaces[Fixed2];
 
     updateHighlight();
     startRollTimer();
@@ -102,7 +100,6 @@ function rollDice() {
         if (rollingTime >= 1000) {
             clearInterval(animation);
             diceEl.innerText = diceFaces[finalRoll];
-
             if (currentPlayer === 1 && p1Turns < MAX_TURNS)
                 handleRoll(finalRoll, "p1");
             else if (currentPlayer === 2 && p2Turns < MAX_TURNS)
@@ -115,8 +112,8 @@ function rollDice() {
 function handleRoll(roll, player) {
 
     const isP1 = player === "p1";
-    const firstFixed = p1Fixed;
-    const secondFixed = p2Fixed;
+    const firstFixed = Fixed1;
+    const secondFixed = Fixed2;
     const playerName = isP1 ? player1Name : player2Name;
     const tableId = isP1 ? "p1Table" : "p2Table";
     let turnNumber = isP1 ? p1Turns + 1 : p2Turns + 1;
@@ -125,8 +122,11 @@ function handleRoll(roll, player) {
     if (stage === 0) {
         if (roll === firstFixed) {
             addToTable(tableId, turnNumber, diceFaces[roll], "Matched ✅");
-            if (isP1) p1Stage = 1; else p2Stage = 1;
-
+            if (isP1) {
+                p1Stage = 1;
+            } else {
+                p2Stage = 1;
+            }
             startRollTimer();
             return;
         }
@@ -152,6 +152,7 @@ function handleRoll(roll, player) {
         }
 
         addToTable(tableId, "Bonus", diceFaces[roll], "No Match Dice2❌");
+        decreaseEnergy(isP1);
         if (isP1) {
             p1Stage = 0;
             p1Turns++;
@@ -161,7 +162,6 @@ function handleRoll(roll, player) {
             p2Turns++;
             currentPlayer = 1;
         }
-
         updateHighlight();
         checkMaxTurns();
         startRollTimer();
@@ -198,28 +198,21 @@ function checkMaxTurns() {
 function addToTable(tableId, turn, roll, status) {
     const table = document.getElementById(tableId);
     const row = document.createElement("tr");
-    row.innerHTML = `<td>${turn}</td><td>${roll}</td><td>${status}</td>`;
+    row.innerHTML = `<td>${turn}</td>
+    <td>${roll}</td>
+    <td>${status}</td>`;
     table.appendChild(row);
 }
-
-function updateEnergyBars() {
-    document.getElementById("p1Progress").style.width = p1Energy + "%";
-    document.getElementById("p2Progress").style.width = p2Energy + "%";
-}
-
 
 function startRollTimer() {
 
     clearInterval(countdownInterval);
     timeLeft = 20;
-
     const timerEl = document.getElementById("timer");
     timerEl.innerText = timeLeft;
-
     countdownInterval = setInterval(() => {
         timeLeft--;
         timerEl.innerText = timeLeft;
-
         if (timeLeft <= 0) {
             clearInterval(countdownInterval);
             rollDice();
@@ -228,33 +221,43 @@ function startRollTimer() {
 }
 
 function finishGame(winner) {
-    saveLeaderboard(winner);
+    saveLeaderboard(winner + " wins");
     document.getElementById("winnerText").innerText = `🏆 ${winner} Wins!`;
     document.getElementById("winnerScreen").style.display = "flex";
     clearInterval(countdownInterval);
 }
 
 function finishDraw() {
-    saveLeaderboard("Draw");
+    p1Energy = 0;
+    p2Energy = 0;
+    updateEnergyBars();
+    saveLeaderboard("Game Draw");
     document.getElementById("drawScreen").style.display = "flex";
     clearInterval(countdownInterval);
 }
 
 function saveLeaderboard(result) {
+    let today = new Date().toDateString();
     let history = JSON.parse(localStorage.getItem("leaderboard")) || [];
-    history.push({ player1: player1Name, player2: player2Name, result });
+    history.unshift({
+        player1: player1Name,
+        player2: player2Name,
+        result: result,
+        date: today
+    });
     localStorage.setItem("leaderboard", JSON.stringify(history));
 }
 
 function loadLeaderboard() {
+
     const tbody = document.getElementById("leaderboardBody");
     if (!tbody) return;
-
     tbody.innerHTML = "";
-
+    let today = new Date().toDateString();
     let history = JSON.parse(localStorage.getItem("leaderboard")) || [];
+    let todayGames = history.filter(game => game.date === today);
 
-    history.forEach(game => {
+    todayGames.forEach(game => {
         const row = document.createElement("tr");
         row.innerHTML = `
             <td>${game.player1}</td>
@@ -274,7 +277,6 @@ function goHome() {
 }
 
 function updateHighlight() {
-
     const p1Box = document.getElementById("p1Card");
     const p2Box = document.getElementById("p2Card");
     const turn1 = document.getElementById("turn1");
@@ -292,3 +294,5 @@ function updateHighlight() {
         turn1.style.display = "none";
     }
 }
+
+

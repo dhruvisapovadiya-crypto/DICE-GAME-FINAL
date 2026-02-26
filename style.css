@@ -1,5 +1,3 @@
-
-
 * {
     margin: 0;
     padding: 0;
@@ -18,7 +16,7 @@ body {
     font-size: 6vw;
     font-weight: 900;
     letter-spacing: 0.5vw;
-    margin: 5vh 0 2vh 0;
+    margin: 3vh 0 2vh 0;
     text-transform: uppercase;
     color: #ffffff;
     text-shadow: 0 0 20px rgba(59, 130, 246, 0.8);
@@ -37,7 +35,7 @@ body {
     display: flex;
     justify-content: space-between;
     width: 90%;
-    margin: 5vh auto;
+    margin: 0 auto;
     gap: 20px;
     flex-wrap: wrap;
 }
@@ -49,6 +47,7 @@ body {
 
 .home-card:last-child {
     flex: 1 1 38%;
+    height: 400px;
 }
 
 .home-card {
@@ -106,10 +105,35 @@ input:focus {
     font-weight: 500;
 }
 
+.leaderboard {
+    height: 400px;
+    overflow-y: auto;
+}
 
+
+.leaderboard::-webkit-scrollbar {
+    width: 8px;
+}
+
+
+.leaderboard::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
+    min-height: 30px;
+}
+
+.leaderboard::-webkit-scrollbar-thumb {
+    background: linear-gradient(120deg, #1e293b, #0f172a);
+    border-radius: 10px;
+}
+
+
+.leaderboard::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(45deg, #cca7c4, #00f5ff);
+}
 
 .leaderboard h2 {
-    font-size: 2vw;
+    font-size: 3vw;
     margin-bottom: 2vh;
     color: #22d3ee;
     text-shadow: 0 0 10px #3b82f6;
@@ -156,7 +180,7 @@ input:focus {
 
 
 .game-container {
-    height: 100vh; 
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -172,7 +196,7 @@ input:focus {
 }
 
 .progress-section {
-    width: 900px;         
+    width: 900px;
     display: flex;
     justify-content: space-between;
     gap: 60px;
@@ -180,25 +204,25 @@ input:focus {
 }
 
 .progress-box {
-    flex: 0 0 40%;       
+    flex: 0 0 40%;
     display: flex;
     flex-direction: column;
 }
 
 #player1Title {
-    margin-left: 0;        
+    margin-left: 0;
     margin-bottom: 10px;
-    align-self: flex-start; 
+    align-self: flex-start;
 }
 
 #player2Title {
-    margin-right: 0;       
+    margin-right: 0;
     margin-bottom: 10px;
-    align-self: flex-end;  
+    align-self: flex-end;
 }
 
 .progress {
-    width: 100%;          
+    width: 100%;
     height: 20px;
     background: #0f172a;
     border-radius: 30px;
@@ -242,8 +266,13 @@ input:focus {
 }
 
 @keyframes spinDice {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .roll-btn {
@@ -281,6 +310,10 @@ input:focus {
 }
 
 .player-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
     padding: 20px;
     border-radius: 18px;
     background: rgba(30, 41, 59, 0.9);
@@ -305,7 +338,7 @@ input:focus {
     color: #facc15;
     border: 1px solid #facc15;
     box-shadow: 0 0 15px rgba(250, 204, 21, 0.6);
-    margin-top: 10px;
+    margin-top: 20px;
     letter-spacing: 1px;
 }
 
@@ -328,13 +361,13 @@ input:focus {
     font-size: 13px;
     text-transform: uppercase;
     color: #22d3ee;
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .game-table td {
     padding: 15px;
     font-size: 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .matched {
@@ -353,12 +386,12 @@ input:focus {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.85);
+    background: rgba(0, 0, 0, 0.85);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 999;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
 }
 
 .winner-box {
@@ -367,14 +400,14 @@ input:focus {
     border-radius: 20px;
     text-align: center;
     color: #fff;
-    box-shadow: 0 0 30px rgba(255,255,255,0.2);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
     animation: fadeIn 0.5s ease-out;
 }
 
 #winnerText {
     font-size: 3em;
     margin-bottom: 30px;
-    color: #ffd700; 
+    color: #ffd700;
     animation: bounce 1s infinite;
 }
 
@@ -395,18 +428,39 @@ input:focus {
 }
 
 @keyframes bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-20px); }
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
 }
 
 @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
 }
 
 @keyframes fadeIn {
-    0% { opacity: 0; transform: scale(0.8); }
-    100% { opacity: 1; transform: scale(1); }
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 
