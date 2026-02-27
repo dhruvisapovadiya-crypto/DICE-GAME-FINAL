@@ -9,7 +9,6 @@
 </head>
 
 <body>
-
     <h1 class="title neon">
         <span>DICE</span>
         <span class="bolt">🗲</span>
@@ -22,8 +21,22 @@
 
     <div class="home-wrapper">
         <div class="home-card glass">
-            <input type="text" id="p1" maxlength="15" placeholder="Player 1 Name">
-            <input type="text" id="p2" maxlength="15" placeholder="Player 2 Name">
+            <div class="player-select-row">
+                <label for="playerCount">Select Number of Players</label>
+                <select id="playerCount">
+                    <option value="2">2 Players</option>
+                    <option value="3">3 Players</option>
+                    <option value="4">4 Players</option>
+                    <option value="5">5 Players</option>
+                    <option value="6">6 Players</option>
+                    <option value="7">7 Players</option>
+                    <option value="8">8 Players</option>
+                    <option value="9">9 Players</option>
+                    <option value="10">10 Players</option>
+                </select>
+            </div>
+                <div id="playersInputContainer"></div>
+            <br>
             <p id="error" class="error-msg"></p>
             <button class="play-btn" onclick="startGame()">🚀 Play Now</button>
         </div>
@@ -33,9 +46,8 @@
             <table class="leaderboard-table">
                 <thead>
                     <tr>
-                        <th>Player 1</th>
-                        <th>Player 2</th>
-                        <th>Result</th>
+                        <th>Players</th>
+                        <th>Winner</th>
                     </tr>
                 </thead>
                 <tbody id="leaderboardBody">
@@ -45,13 +57,37 @@
 
     </div>
 
-    <script src="script.js"></script>
     <script>
+        const playerCountSelect = document.getElementById("playerCount");
+        const container = document.getElementById("playersInputContainer");
+
+        function generateInputs() {
+            container.innerHTML = "";
+            const count = playerCountSelect.value;
+
+            for (let i = 1; i <= count; i++) {
+                const input = document.createElement("input");
+                input.type = "text";
+                input.placeholder = `Player ${i} Name`;
+                input.maxLength = 15;
+                input.classList.add("player-input");
+                container.appendChild(input);
+            }
+        }
+
+        generateInputs();
+        playerCountSelect.addEventListener("change", generateInputs);
+
+
+
+
         window.addEventListener("DOMContentLoaded", function () {
-            loadLeaderboard();
+            if (typeof loadLeaderboard === "function") {
+                loadLeaderboard();
+            }
         });
     </script>
-
+    <script src="script.js"></script>
 </body>
 
 </html>
